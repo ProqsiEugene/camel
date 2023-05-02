@@ -8,7 +8,6 @@ SELECT *
 FROM sessions
 WHERE guid_session = '2ff9f679-0f79-43fb-b027-3b1e521388ba';
 
-
 --находим дату по guid
 select date_session
 FROM sessions

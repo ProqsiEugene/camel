@@ -15,6 +15,7 @@ CREATE TABLE trains
     train_name       VARCHAR(255)
 );
 
+--наполняем trains по дням
 INSERT INTO trains (dt_start, id_station_start, train_name)
 SELECT to_char(now() + (n || ' days')::interval,
                'YYYY-MM-DD HH24:MI:SS'),

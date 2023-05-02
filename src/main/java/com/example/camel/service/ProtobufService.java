@@ -12,13 +12,13 @@ public class ProtobufService {
 
     public byte[] convertDtoToProtobuf(Exchange exchange) {
         TrainDTO trainDto = exchange.getIn().getBody(TrainDTO.class);
-        RuntimeSchema<TrainDTO> schema = RuntimeSchema.createFrom(TrainDTO.class);
-        LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
+        RuntimeSchema<TrainDTO> runtimeSchema = RuntimeSchema.createFrom(TrainDTO.class);
+        LinkedBuffer linkedBuffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
         try {
-            byte[] protobuff = ProtobufIOUtil.toByteArray(trainDto, schema, buffer);
-            return protobuff;
+            byte[]  toProtobuf = ProtobufIOUtil.toByteArray(trainDto, runtimeSchema, linkedBuffer);
+            return toProtobuf;
         } finally {
-            buffer.clear();
+            linkedBuffer.clear();
         }
     }
 }
