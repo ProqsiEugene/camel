@@ -1,12 +1,8 @@
 package com.example.camel.route;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
-
-import static java.lang.invoke.MethodHandles.throwException;
 
 @Component(value = "trainRouteGet")
 public class TrainRouteGet extends RouteBuilder {
