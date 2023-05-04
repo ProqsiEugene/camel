@@ -8,10 +8,6 @@ import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
-
 @Component(value = "trainRoute")
 public class TrainRoutePost extends RouteBuilder {
 
@@ -77,14 +73,6 @@ public class TrainRoutePost extends RouteBuilder {
                 .log("До  fromDtoToDB: " + "${body}")
                 .setBody(simple("${exchangeProperty.bodyValue.getGuid}")) //достаю тело из переменной bodyValue и сохр в body
                 .log("guid: " + "${body}")
-                .to("log:output")
-                .to("direct:checkGuid");
-
-//         Ответ из второго сервиса
-        from("direct:backInFirst")
-                .log("Снова в первом сервисе: " + "${body}")
-
                 .to("log:output");
-
     }
 }
