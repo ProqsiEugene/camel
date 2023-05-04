@@ -55,24 +55,5 @@ public class TrainRoutePost extends RouteBuilder {
                 .setBody(simple("${exchangeProperty.bodyValue.getGuid}")) //достаю тело из переменной bodyValue и сохр в body
                 .log("После метода setBody в guid: " + "${body}")
                 .to("direct:sendDtoToDB");
-
-        from("direct:sendDtoToDB")
-                .routeId("sendDtoToDB")
-                .log("До метода setBody в sendDtoToDB: " + "${body}")
-                .setBody(simple("${exchangeProperty.bodyValue}"))
-                .log("После метода setBody в sendDtoToDB: " + "${body}")
-                .log("${body.getTime}")
-
-
-                .to("sql:INSERT INTO sessions (time_session, ip_session, date_session, guid_session) " +
-                        "values (:#${body.getTime}, :#${body.getIp}, :#${body.getDate}, :#${body.getGuid})")
-                .to("log:output")
-                .to("direct:fromDtoToDB");
-
-        from("direct:fromDtoToDB")
-                .log("До  fromDtoToDB: " + "${body}")
-                .setBody(simple("${exchangeProperty.bodyValue.getGuid}")) //достаю тело из переменной bodyValue и сохр в body
-                .log("guid: " + "${body}")
-                .to("log:output");
     }
 }
