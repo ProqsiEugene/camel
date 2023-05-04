@@ -7,6 +7,14 @@ CREATE TABLE sessions
     date_session VARCHAR(255)
 );
 
+CREATE TABLE sessions
+(
+    ip_session   VARCHAR(255),
+    guid_session VARCHAR(255),
+    time_session VARCHAR(255),
+    date_session VARCHAR(255)
+);
+
 CREATE TABLE trains
 (
     id_train         BIGSERIAL PRIMARY KEY,

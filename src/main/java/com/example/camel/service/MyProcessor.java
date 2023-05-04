@@ -17,7 +17,6 @@ public class MyProcessor implements Processor {
         TrainDTO trainDTO = exchange.getIn().getBody(TrainDTO.class);
         ServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
         trainDTO.setTime(LocalTime.now().toString());
-        trainDTO.setDate(trainDTO.getDate());
         trainDTO.setIp(request.getRemoteAddr());
         trainDTO.setGuid(UUID.randomUUID().toString());
         exchange.getIn().setBody(trainDTO);

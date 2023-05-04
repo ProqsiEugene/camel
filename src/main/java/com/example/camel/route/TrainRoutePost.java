@@ -13,15 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component(value = "trainRoute")
-public class TrainRoute extends RouteBuilder {
+public class TrainRoutePost extends RouteBuilder {
 
     @Autowired
     private MyProcessor myProcessor;
-
-    @Autowired
-    private DataSource dataSource;
-
-    List<TrainDTO> trains = new ArrayList<>();
 
     @Override
     public void configure() throws Exception {
@@ -70,41 +65,26 @@ public class TrainRoute extends RouteBuilder {
                 .log("До метода setBody в sendDtoToDB: " + "${body}")
                 .setBody(simple("${exchangeProperty.bodyValue}"))
                 .log("После метода setBody в sendDtoToDB: " + "${body}")
+                .log("${body.getTime}")
 
-                //.to("INSERT INTO sessions (guid_session, ip_session, time_session, date_session) values (:#guid, :#ip, :#time, :#date)}")
+
+                .to("sql:INSERT INTO sessions (time_session, ip_session, date_session, guid_session) " +
+                        "values (:#${body.getTime}, :#${body.getIp}, :#${body.getDate}, :#${body.getGuid})")
+                .to("log:output")
+                .to("direct:fromDtoToDB");
+
+        from("direct:fromDtoToDB")
+                .log("До  fromDtoToDB: " + "${body}")
+                .setBody(simple("${exchangeProperty.bodyValue.getGuid}")) //достаю тело из переменной bodyValue и сохр в body
+                .log("guid: " + "${body}")
+                .to("log:output")
+                .to("direct:checkGuid");
+
+//         Ответ из второго сервиса
+        from("direct:backInFirst")
+                .log("Снова в первом сервисе: " + "${body}")
 
                 .to("log:output");
+
     }
 }
-//моё можно удалять
-//        .unmarshal().protobuf().to("INSERT INTO sessions (guid_session, ip_session, time_session, date_session) values (?, ?, ?, ?)")
-//         .to("INSERT INTO sessions (guid_session, ip_session, time_session, date_session) values (?, ?, ?, ?)")
-// .to("sqlComponent:{INSERT INTO sessions (guid_session, ip_session, time_session, date_session) values (?, ?, ?, ?)}")
-
-
-
-
-
-
-
-//        from("direct:fromDtoToDB")
-//                .process(exchange -> {
-//                    log.info("Guid: " + exchange.getProperty("guid"));
-//                    String guid = (String) exchange.getProperty("guid");
-//
-//                    // Выборка из БД по заданным условиям
-//                    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-//
-//                    List<Map<String, Object>> trains = jdbcTemplate.queryForList(
-//                            "SELECT id_train, upper(train_name) AS train_name, id_station_start, dt_start from trains\n" +
-//                                    "WHERE dt_start > (select date_session FROM sessions where guid_session = ?)\n" +
-//                                    "ORDER BY dt_start;\n", guid);
-//                    if (trains.isEmpty()) {
-//                        exchange.getMessage().setBody("No data found for guid: " + guid);
-//                    } else {
-//                        exchange.getMessage().setBody(trains);
-//                    }
-//                })
-//                .split().body().threads(5);
-//    }
-//}
